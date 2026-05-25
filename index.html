@@ -151,6 +151,21 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--t1);font-
 #toast{position:fixed;bottom:70px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--bg3);border:1px solid var(--bd2);border-radius:8px;padding:8px 18px;font-size:.82rem;color:var(--t1);z-index:500;opacity:0;transition:opacity .3s,transform .3s;pointer-events:none;white-space:nowrap}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .empty{text-align:center;padding:40px 20px;color:var(--t3);font-size:.88rem}
+#pane-f{flex-direction:column;overflow:hidden!important;padding:0!important}
+#pane-f.active{display:flex!important}
+#ri-wrap{flex:1;overflow:auto;-webkit-overflow-scrolling:touch;min-height:0;position:relative}
+#ri-inner{position:relative;display:inline-block;min-width:1200px}
+#ri-img{display:block;width:1200px;height:auto;max-width:none}
+@media(max-width:768px){#ri-inner{min-width:900px}#ri-img{width:900px}}
+.vdot{position:absolute;width:14px;height:14px;border-radius:50%;border:1.5px solid rgba(0,0,0,.5);transform:translate(-50%,-50%);cursor:pointer;z-index:10;transition:transform .15s}
+.vdot:hover,.vdot:active{transform:translate(-50%,-50%) scale(1.6)}
+.vdot.op{background:var(--gr);box-shadow:0 0 5px rgba(0,230,118,.6)}
+.vdot.nu{background:var(--ac);box-shadow:0 0 5px rgba(0,200,240,.6)}
+.vdot.tg{background:var(--yw);box-shadow:0 0 5px rgba(255,215,64,.6)}.vdot.ot{background:var(--pu);box-shadow:0 0 5px rgba(180,142,255,.6)}
+.vdot.cl{background:rgba(74,93,114,.3);border-color:rgba(74,93,114,.35)}
+@media(max-width:768px){.vdot{width:18px;height:18px;border-width:2px}}
+.f-hdr{padding:6px 12px;background:var(--bg2);border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:8px;flex-shrink:0}
+.f-hdr-t{flex:1;font-size:.72rem;color:var(--t2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:var(--fm)}
 </style>
 </head>
 <body>
@@ -217,6 +232,13 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--t1);font-
       <div class="sec">Statistik</div>
       <div id="stcont"></div>
     </div>
+    <div class="pane" id="pane-f" style="padding:0">
+      <div class="f-hdr">
+        <div class="f-hdr-t" id="f-lbl">◈ Schritt wählen oder im Schritte-Tab öffnen</div>
+        <button class="btn-out" onclick="openFlowPicker()">Schritt</button>
+      </div>
+      <div id="ri-wrap"><div id="ri-inner"><img id="ri-img" src="ri.webp" alt="RI-Fließschema" onload="fRiOk=true;rFlowDots()" onerror="document.getElementById('f-lbl').textContent='⚠ Fließbild konnte nicht geladen werden'"></div></div>
+    </div>
   </div>
   <div class="tabbar">
     <button class="tab active" onclick="sw('p',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Prog.</button>
@@ -224,6 +246,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--t1);font-
     <button class="tab" onclick="sw('a',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Analyse</button>
     <button class="tab" onclick="sw('u',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Übergabe</button>
     <button class="tab" onclick="sw('st',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Statistik</button>
+    <button class="tab" onclick="sw('f',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="2" y="3" width="5" height="5" rx="1"/><rect x="17" y="3" width="5" height="5" rx="1"/><rect x="2" y="16" width="5" height="5" rx="1"/><rect x="17" y="16" width="5" height="5" rx="1"/><line x1="7" y1="5.5" x2="17" y2="5.5"/><line x1="7" y1="18.5" x2="17" y2="18.5"/><line x1="4.5" y1="8" x2="4.5" y2="16"/><line x1="19.5" y1="8" x2="19.5" y2="16"/></svg>Schema</button>
   </div>
 </div>
 <div id="dm"><div class="dp" id="dpanel">
@@ -239,6 +262,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--t1);font-
   <div class="dbtns">
     <button class="bx" onclick="openTm()">⏱ Timer</button>
     <button class="bx" onclick="trigPh()">📷 Foto</button>
+    <button class="bx" onclick="goSchema()">◈ Schema</button>
     <input type="file" id="phi" accept="image/*" capture="environment" onchange="addPh(event)" style="display:none">
   </div>
   <div id="dphotos" style="padding:0 16px 8px;display:flex;flex-wrap:wrap;gap:6px"></div>
@@ -281,7 +305,7 @@ function doLogin(){
 }
 function doLogout(){if(!confirm('Abmelden?'))return;U=null;document.getElementById('app').classList.remove('show');document.getElementById('login').style.display='flex';}
 function init(){rProgs();bUprog();rStats();}
-function sw(n,el){document.querySelectorAll('.pane').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));document.getElementById('pane-'+n).classList.add('active');el.classList.add('active');if(n==='st')rStats();}
+function sw(n,el){document.querySelectorAll('.pane').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));document.getElementById('pane-'+n).classList.add('active');el.classList.add('active');if(n==='st')rStats();if(n==='f')rFlowDots();}
 const GO=['Medienventile','Sicherheitsventile','Vereinzelungsventile','Füllstation','Nachbegasen','Schließbegasen','Medieneinheit/WT','Ventile','Produktfilter','SF Dosierbehälter','SF Begasungsstationen','Nadelventil/Filtertest','Ablauf','Ausgänge extern','Eingänge extern'];
 function vcls(c){if(!c)return'ot';const u=String(c).toUpperCase().trim();if(u==='X'||(u.startsWith('X')&&isNaN(u.slice(1))))return'op';if(u==='0/1')return'tg';if(!isNaN(u))return'nu';return'op';}
 function rProgs(){
@@ -330,7 +354,8 @@ function openD(seq){
   document.getElementById('dm').classList.add('open');
   document.getElementById('dpanel').scrollTop=0;
 }
-function closeD(){document.getElementById('dm').classList.remove('open');CS=null;}
+function closeD(){document.getElementById('dm').classList.remove('open');}
+function goSchema(){closeD();sw('f',document.querySelectorAll('.tab')[5]);rFlowDots();}
 function setSt(st){if(!CS)return;if(!ST.steps[CS])ST.steps[CS]={};ST.steps[CS].status=st;ST.steps[CS].statusTime=Date.now();ST.steps[CS].statusUser=U?.name||'';sv();rSteps();closeD();toast(st==='done'?'✓ Erledigt':st==='skip'?'↷ Übersprungen':'⚠ Problem gemeldet');}
 function saveCmt(){if(!CS)return;if(!ST.steps[CS])ST.steps[CS]={};ST.steps[CS].comment=document.getElementById('dcmt').value;sv();}
 function trigPh(){document.getElementById('phi').click();}
@@ -342,7 +367,7 @@ function closeTm(){clearInterval(tmI);tmR=false;document.getElementById('tm').cl
 function openPicker(t){pkT=t;document.getElementById('spinp').value='';bkPl('');document.getElementById('sp').classList.add('open');document.getElementById('spinp').focus();}
 function bkPl(q){const l=document.getElementById('splist');const qq=q.toLowerCase();let h='';for(const[seq,s]of Object.entries(VSP.s)){if(qq&&!s.n.toLowerCase().includes(qq)&&!(VSP.bl[s.b]||'').toLowerCase().includes(qq)&&!seq.includes(qq))continue;h+=`<div class="spit" onclick="pkSt('${seq}')"><div class="spinr">Schritt ${s.nr} · Seq ${seq}</div><div class="spin">${s.n||'—'}</div><div class="spib">${VSP.bl[s.b]||''}</div></div>`;}l.innerHTML=h||'<div style="padding:20px;color:var(--t3);text-align:center">Keine Treffer</div>';}
 function fltPk(){bkPl(document.getElementById('spinp').value);}
-function pkSt(seq){document.getElementById('sp').classList.remove('open');const s=VSP.s[seq];if(!s)return;if(pkT==='A'){cA=seq;document.getElementById('pav').textContent=`${s.nr}: ${s.n}`;}else{cB=seq;document.getElementById('pbv').textContent=`${s.nr}: ${s.n}`;}if(cA&&cB)rCmp();}
+function pkSt(seq){document.getElementById('sp').classList.remove('open');const s=VSP.s[seq];if(!s)return;if(pkT==='A'){cA=seq;document.getElementById('pav').textContent=`${s.nr}: ${s.n}`;}else if(pkT==='B'){cB=seq;document.getElementById('pbv').textContent=`${s.nr}: ${s.n}`;}else if(pkT==='F'){CS=seq;rFlowDots();return;}if(cA&&cB)rCmp();}
 function rCmp(){const sA=VSP.s[cA],sB=VSP.s[cB];if(!sA||!sB)return;const mA=Object.fromEntries(sA.o),mB=Object.fromEntries(sB.o);const av=[...new Set([...Object.keys(mA),...Object.keys(mB)])].sort();let ca='',cb='',sm=0,df=0,oA=0,oB=0;for(const v of av){const a=mA[v],b=mB[v];if(a&&b){const c=a===b?'m':'d';if(a===b)sm++;else df++;ca+=`<div class="cv ${c}"><span>${v}</span><span>${a}</span></div>`;cb+=`<div class="cv ${c}"><span>${v}</span><span>${b}</span></div>`;}else if(a){oA++;ca+=`<div class="cv o"><span>${v}</span><span>${a}</span></div>`;cb+=`<div class="cv" style="opacity:.2"><span>${v}</span><span>—</span></div>`;}else{oB++;ca+=`<div class="cv" style="opacity:.2"><span>${v}</span><span>—</span></div>`;cb+=`<div class="cv o"><span>${v}</span><span>${b}</span></div>`;}}document.getElementById('cres').innerHTML=`<div style="font-size:.72rem;color:var(--t3);margin-bottom:8px;font-family:var(--fm)">✓ ${sm} · ≠ ${df} · A ${oA} · B ${oB}</div><div class="cgrid"><div class="ccol"><div class="chdr">A · ${sA.n}</div>${ca}</div><div class="ccol"><div class="chdr">B · ${sB.n}</div>${cb}</div></div>`;}
 function bUprog(){const s=document.getElementById('uprog');s.innerHTML='<option value="">— wählen —</option>';for(const[pid,p]of Object.entries(VSP.progs)){if(p.name==='Reserve')continue;const o=document.createElement('option');o.value=pid;o.textContent=`Prog ${pid}: ${p.name}`;s.appendChild(o);}}
 function genRep(){const pid=document.getElementById('uprog').value,step=document.getElementById('ustep').value.trim(),iss=document.getElementById('uiss').value.trim(),nts=document.getElementById('unts').value.trim();const now=new Date(),ts=now.toLocaleString('de-DE',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});const p=pid?VSP.progs[pid]:null,ps=p?p.steps:[],dn=ps.filter(s=>ST.steps[s]?.status==='done').length,pr=ps.filter(s=>ST.steps[s]?.status==='problem').length,sk=ps.filter(s=>ST.steps[s]?.status==='skip').length;const prs=ps.filter(s=>ST.steps[s]?.status==='problem').map(s=>{const x=VSP.s[String(s)];const c=ST.steps[s]?.comment||'';return`  · Schritt ${x?.nr||s}: ${x?.n||'?'}${c?' → '+c:''}`;});let r=`╔══════════════════════════════════════════════╗\n║  SCHICHTÜBERGABE · AFL CIP/SIP VSP          ║\n║  Maschine 54235 · FFV12024 · Bau 235        ║\n╚══════════════════════════════════════════════╝\n\nDatum / Zeit : ${ts}\nÜbergabe von : ${U?.name||'?'} (${U?.schicht||'?'} · ${U?.funktion||'?'})\n${p?'Programm     : Prog '+pid+' · '+p.name:''}\n${step?'Aktueller Schr.: '+step:''}\n\n────────────────────────────────────────────\nFORTSCHRITT\n────────────────────────────────────────────\n${p?`Gesamt: ${ps.length} · Erledigt: ${dn} · Übersprungen: ${sk} · Probleme: ${pr}`:'Kein Programm.'}\n${prs.length?'\n────────────────────────────────────────────\nPROBLEME\n────────────────────────────────────────────\n'+prs.join('\n'):''}${iss?'\n\n────────────────────────────────────────────\nOFFENE PUNKTE\n────────────────────────────────────────────\n'+iss:''}${nts?'\n\n────────────────────────────────────────────\nVORKOMNISSE\n────────────────────────────────────────────\n'+nts:''}\n\n────────────────────────────────────────────\nGeneriert: ${ts} · ◈ AFL VSP Roche Kaiseraugst\n────────────────────────────────────────────`;
@@ -350,11 +375,38 @@ document.getElementById('repout').innerHTML=`<div class="rbox">${r.replace(/</g,
 function exportSync(){const d={v:1,steps:ST.steps,ts:Date.now(),user:U?.name||''};prompt('Sync-Code:',btoa(unescape(encodeURIComponent(JSON.stringify(d)))));}
 function importSync(){const c=prompt('Sync-Code:');if(!c)return;try{const d=JSON.parse(decodeURIComponent(escape(atob(c.trim()))));if(d.steps){ST.steps={...ST.steps,...d.steps};sv();rSteps();rStats();toast('✓ Sync OK');}}catch(e){toast('Ungültiger Code');}}
 function rStats(){const c=document.getElementById('stcont');const all=Object.values(ST.steps);const td=all.filter(s=>s.status==='done').length,tp=all.filter(s=>s.status==='problem').length,ts2=all.filter(s=>s.status==='skip').length;const pb={};for(const[seq,s]of Object.entries(ST.steps)){if(s.status!=='problem')continue;for(const[pid,p]of Object.entries(VSP.progs)){if(p.steps.includes(parseInt(seq))){pb[pid]=(pb[pid]||0)+1;break;}}}const mx=Math.max(1,...Object.values(pb));let pr='';for(const[pid,cnt]of Object.entries(pb).sort((a,b)=>b[1]-a[1]).slice(0,8)){const p=VSP.progs[pid];if(!p)continue;pr+=`<div class="sbrw"><div class="sblb" title="${p.name}">P${pid}: ${p.name}</div><div class="sbtr"><div class="sbfl" style="width:${Math.round(cnt/mx*100)}%"></div></div><div class="sbct">${cnt}</div></div>`;}c.innerHTML=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px"><div class="scard"><div class="slbl">Erledigt</div><div class="sval" style="color:var(--gr)">${td}</div></div><div class="scard"><div class="slbl">Probleme</div><div class="sval" style="color:var(--rd)">${tp}</div></div><div class="scard"><div class="slbl">Übersprungen</div><div class="sval" style="color:var(--yw)">${ts2}</div></div><div class="scard"><div class="slbl">Schritte</div><div class="sval">${Object.keys(VSP.s).length}</div></div></div>${pr?`<div class="scard"><div class="slbl" style="margin-bottom:10px">Probleme nach Programm</div>${pr}</div>`:'<div class="empty">✓ Keine Probleme.</div>'}`;}
+const VP={"E_ext3":[87.49,48.44],"V5.1":[14.42,37.35],"V5.2":[20.34,37.37],"V5.4":[23.35,38.43],"V5.3":[25.87,37.36],"V5.13":[25.36,35.91],"V5.5":[22.89,39.18],"V3.24":[11.4,44.94],"V3.21":[13.52,47.46],"V3.18":[15.85,44.97],"V3.9":[22.52,47.46],"V3.12":[20.4,44.96],"V3.14":[18.83,44.95],"V3.23":[12.06,47.46],"V3.20":[14.35,44.97],"V3.17":[16.59,47.46],"V3.8":[23.34,44.96],"V3.11":[21.04,47.46],"V3.15":[18.07,47.49],"V3.22":[12.87,44.97],"V3.19":[15.11,47.46],"V3.16":[17.36,44.96],"V3.7":[24.07,47.46],"V3.10":[21.89,44.96],"V3.13":[19.56,47.45],"V3.3":[27.02,47.45],"V3.2":[27.8,44.95],"V3.4":[26.32,44.95],"V3.1":[28.53,47.49],"V3.5":[25.56,47.49],"V3.6":[24.84,44.94],"V5.6":[10.67,43.32],"V4.1":[10.07,69.85],"V8.4":[63.81,14.23],"V8.1":[59.85,9.28],"V8.9":[58.23,20.27],"E_ext2":[62.08,8.74],"V12.16":[80.92,48.05],"V13.3":[83.37,47.08],"V12.14":[82.72,47.32],"V7.1":[41.41,76.91],"V14.6":[79.63,77.44],"V14.4":[77.16,77.11],"V14.3":[74.14,76.95],"V5.14":[83.98,80.23],"V14.12":[85.1,80.92],"V14.13":[84.2,80.92],"V12.6":[83.18,44.37],"V7.2":[42.48,76.9],"V14.5":[72.07,76.89],"V14.10":[85.37,80.16],"V5.12":[75.17,76.94],"V14.8":[81.15,80.17],"V14.7":[82.13,80.16],"V14.9":[83.06,80.37],"V6.2":[34.22,72.52],"V5.7":[11.69,73.8],"V6.1":[33.73,74.07],"V6.3":[35.37,74.04],"V5.11":[37.85,76.95],"V6.7":[36.26,74.04],"V14.1":[76.03,76.96],"V6.5":[55.02,73.37],"V5.9":[38.74,76.89],"V4.7":[9.64,75.29],"V4.8":[10.72,76.9],"V4.13":[14.2,76.9],"V4.14":[15.13,76.91],"V14.11":[16.29,76.95],"V7.6":[18.39,76.91],"V7.5":[19.27,76.91],"V6.8":[20.47,76.9],"V12.9":[78.64,46.15],"V12.3":[83.9,43.7],"V12.1":[84.68,39.26],"V13.6":[88.66,83.39],"V14.15":[86.21,84.01],"V14.14":[87.0,84.0],"V13.5":[88.13,83.66],"V14.2":[79.64,75.76],"V10.9":[60.13,45.21],"V11.14":[63.91,47.2],"V11.12":[65.71,46.53],"V11.15":[66.41,46.29],"V11.2":[66.59,43.08],"V11.6":[66.1,43.94],"V11.9":[66.39,44.42],"V11.5":[63.91,43.13],"V10.1":[58.55,43.94],"V12.10":[79.2,46.38],"V10.8":[59.85,44.65],"V10.3":[61.87,44.82],"V11.16":[64.79,47.03],"V11.11":[67.06,46.27],"V12.2":[84.96,39.93],"V13.4":[81.76,47.8],"V11.4":[67.06,43.14],"V10.2":[61.94,41.83],"V10.4":[61.37,41.82],"V10.6":[59.48,44.01],"V10.7":[61.26,43.95],"V11.13":[64.39,46.33],"V12.12":[84.06,47.09],"V12.8":[83.41,45.47],"V11.1":[63.95,42.41],"V11.7":[63.42,45.36],"V11.8":[64.91,45.4],"V11.10":[66.92,45.38],"V12.7":[82.07,46.14],"V12.11":[83.85,46.16],"V12.15":[81.34,47.13],"V10.5":[61.26,42.67],"V11.3":[64.57,43.5],"V13.1":[71.82,46.75],"V13.2":[75.67,46.79],"V12.5":[80.93,44.39],"V12.4":[81.53,44.69],"V1.2":[59.6,17.28],"V8.6":[60.8,17.07],"V1.5":[65.01,11.3],"V8.2":[61.64,9.34],"V8.3":[60.91,13.5],"V1.6":[65.5,12.22],"V1.4":[65.18,11.85],"V8.7":[62.34,16.61],"V8.5":[59.17,16.69],"V1.1":[53.87,15.53],"V8.10":[50.94,13.82],"V1.3":[61.67,17.28],"E_ext1":[59.19,8.71],"V8.12":[51.34,17.76],"V8.11":[51.34,14.53],"V1.7":[53.63,16.94],"V10.10":[60.79,45.12],"V13.7":[87.86,54.52]};
+let fRiOk=false;
+function rFlowDots(){
+  if(!fRiOk)return;
+  const inner=document.getElementById('ri-inner');
+  inner.querySelectorAll('.vdot').forEach(d=>d.remove());
+  const lbl=document.getElementById('f-lbl');
+  let vm={};
+  if(CS&&VSP&&VSP.s[String(CS)]){
+    const s=VSP.s[String(CS)];
+    vm=Object.fromEntries(s.o);
+    lbl.textContent=`Schritt ${s.nr}: ${s.n||'—'} · ${VSP.bl[s.b]||''}`;
+  }else{lbl.textContent='◈ Schritt wählen oder im Schritte-Tab öffnen';}
+  for(const[nm,[xp,yp]]of Object.entries(VP)){
+    const dot=document.createElement('div');
+    const val=vm[nm];
+    dot.className='vdot '+(val?vcls(val):'cl');
+    dot.style.left=xp+'%';dot.style.top=yp+'%';
+    dot.title=`${nm}: ${val||'—'}`;
+    dot.onclick=()=>toast(`${nm}: ${val||'—'}`);
+    inner.appendChild(dot);
+  }
+}
+function openFlowPicker(){pkT='F';document.getElementById('spinp').value='';bkPl('');document.getElementById('sp').classList.add('open');document.getElementById('spinp').focus();}
 let toastT;function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),2200);}
 document.getElementById('dm').addEventListener('click',function(e){if(e.target===this)closeD();});
 document.getElementById('tm').addEventListener('click',function(e){if(e.target===this)closeTm();});
 document.getElementById('sp').addEventListener('click',function(e){if(e.target===this)this.classList.remove('open');});
 ld();
+// Fallback: if image was already cached, onload might not fire
+const _riImg=document.getElementById('ri-img');
+if(_riImg&&_riImg.complete&&_riImg.naturalHeight>0){fRiOk=true;}
 window.addEventListener('vsp-ready',()=>{
   document.getElementById('loading').style.display='none';
   if(ST.user&&ST.user.loginTime&&(Date.now()-ST.user.loginTime<12*3600*1000)){U=ST.user;document.getElementById('login').style.display='none';document.getElementById('app').classList.add('show');document.getElementById('tu').textContent=U.name;document.getElementById('ti').textContent=U.schicht+' · '+U.funktion;init();}
