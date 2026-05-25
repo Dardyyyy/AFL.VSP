@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#0b0d10">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>◈ VSP AFL · 54235</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{--bg:#0b0d10;--bg2:#111418;--bg3:#181c22;--bg4:#1e2430;--ac:#00c8f0;--ac2:#0090b8;--gr:#00e676;--gr2:#00a854;--yw:#ffd740;--rd:#ff4444;--pu:#b48eff;--t1:#e8edf4;--t2:#8ca0b8;--t3:#4a5d72;--bd:#1e2a38;--bd2:#253245;--fm:'JetBrains Mono',monospace;--fs:'IBM Plex Sans',sans-serif;--th:58px;--toh:52px}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--t1);font-family:var(--fs)}
+::-webkit-scrollbar{width:4px;height:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--bd2);border-radius:2px}
+#loading{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:2000}
+.ld-logo{font-family:var(--fm);font-size:2.2rem;font-weight:700;color:var(--ac);text-shadow:0 0 32px rgba(0,200,240,.4);margin-bottom:8px}
+.ld-sub{font-size:.8rem;color:var(--t3);font-family:var(--fm)}
+#login{position:fixed;inset:0;background:var(--bg);display:none;flex-direction:column;align-items:center;justify-content:center;z-index:1000;padding:24px}
+.lg-logo{font-family:var(--fm);font-size:2.2rem;font-weight:700;color:var(--ac);text-shadow:0 0 32px rgba(0,200,240,.4);margin-bottom:6px}
+.lg-brand{font-family:var(--fm);font-size:.85rem;color:var(--t2);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px}
+.lg-sub{font-size:.78rem;color:var(--t3);letter-spacing:.5px;margin-bottom:32px}
+.lg-card{background:var(--bg2);border:1px solid var(--bd2);border-radius:16px;padding:28px 24px;width:100%;max-width:380px}
+.lg-title{font-size:1.15rem;font-weight:600;margin-bottom:20px}
+.fld{margin-bottom:16px}
+.fld label{display:block;font-size:.75rem;color:var(--t2);margin-bottom:6px;letter-spacing:.5px;text-transform:uppercase;font-family:var(--fm)}
+.fld input{width:100%;background:var(--bg3);border:1px solid var(--bd2);border-radius:8px;color:var(--t1);font-size:.95rem;padding:10px 14px;outline:none;font-family:var(--fs);transition:border-color .2s}
+.fld input:focus{border-color:var(--ac)}
+.tgl-grp{display:flex;gap:8px}
+.tgl{flex:1;padding:10px 6px;background:var(--bg3);border:1px solid var(--bd2);border-radius:8px;color:var(--t2);font-size:.85rem;cursor:pointer;font-family:var(--fs);transition:all .2s;text-align:center}
+.tgl.as{background:var(--ac);border-color:var(--ac);color:#000;font-weight:600}
+.tgl.af{background:var(--pu);border-color:var(--pu);color:#000;font-weight:600}
+.btn-lg{width:100%;padding:13px;background:var(--ac);color:#000;border:none;border-radius:8px;font-size:1rem;font-weight:600;cursor:pointer;font-family:var(--fs);transition:opacity .2s;margin-top:4px}
+.btn-lg:hover{opacity:.85}
+#app{display:none;height:100%;flex-direction:column}
+#app.show{display:flex}
+.topbar{height:var(--toh);background:var(--bg2);border-bottom:1px solid var(--bd);display:flex;align-items:center;padding:0 16px;gap:12px;flex-shrink:0}
+.tb-brand{font-family:var(--fm);font-size:.92rem;color:var(--ac);font-weight:700;flex:1}
+.tb-user{font-size:.72rem;color:var(--t2);text-align:right;line-height:1.4}
+.tb-user span{display:block}
+.btn-out{background:none;border:1px solid var(--bd2);border-radius:6px;color:var(--t3);font-size:.7rem;padding:4px 8px;cursor:pointer;font-family:var(--fm);transition:color .2s,border-color .2s}
+.btn-out:hover{color:var(--rd);border-color:var(--rd)}
+.content{flex:1;overflow:hidden;position:relative}
+.pane{position:absolute;inset:0;overflow-y:auto;padding:12px 12px 70px;display:none}
+.pane.active{display:block}
+.tabbar{height:var(--th);background:var(--bg2);border-top:1px solid var(--bd);display:flex;flex-shrink:0}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;background:none;border:none;color:var(--t3);font-size:.6rem;font-family:var(--fs);letter-spacing:.3px;transition:color .2s;padding-bottom:2px}
+.tab svg{width:20px;height:20px}
+.tab.active{color:var(--ac)}
+.tab.active svg path,.tab.active svg rect,.tab.active svg circle,.tab.active svg polyline,.tab.active svg line{stroke:var(--ac)}
+.sec{font-family:var(--fm);font-size:.7rem;color:var(--t3);letter-spacing:1.5px;text-transform:uppercase;padding:8px 4px 6px;border-bottom:1px solid var(--bd);margin-bottom:10px}
+.pgrid{display:flex;flex-direction:column;gap:8px}
+.pcard{background:var(--bg2);border:1px solid var(--bd);border-radius:10px;padding:14px 16px;cursor:pointer;transition:border-color .2s,background .2s;position:relative}
+.pcard:hover,.pcard:active{border-color:var(--ac);background:var(--bg3)}
+.pcard.sel{border-color:var(--ac);background:var(--bg3)}
+.pnum{font-family:var(--fm);font-size:.7rem;color:var(--ac);margin-bottom:4px}
+.pname{font-size:.9rem;font-weight:500;color:var(--t1);line-height:1.35}
+.pmeta{font-size:.72rem;color:var(--t3);margin-top:4px;font-family:var(--fm)}
+.ppct{position:absolute;right:16px;top:50%;transform:translateY(-50%);font-family:var(--fm);font-size:.72rem;color:var(--t3)}
+.ppct.dn{color:var(--gr)}
+.phdr{background:var(--bg2);border:1px solid var(--bd);border-radius:10px;padding:12px 14px;margin-bottom:12px}
+.phdr-n{font-size:.95rem;font-weight:600;color:var(--ac)}
+.phdr-m{font-size:.72rem;color:var(--t3);margin-top:3px;font-family:var(--fm)}
+.slist{display:flex;flex-direction:column;gap:6px}
+.sc{background:var(--bg2);border:1px solid var(--bd);border-radius:10px;overflow:hidden;cursor:pointer;transition:border-color .2s}
+.sc.dn{border-color:var(--gr2)}.sc.sk{border-color:#c9a800}.sc.pr{border-color:#b22222}
+.shdr{padding:11px 14px;display:flex;align-items:center;gap:10px}
+.snr{font-family:var(--fm);font-size:.7rem;color:var(--t3);min-width:28px}
+.si{flex:1;min-width:0}
+.sn{font-size:.88rem;font-weight:500;color:var(--t1);line-height:1.3}
+.ss{display:flex;align-items:center;gap:6px}
+.sdot{width:10px;height:10px;border-radius:50%;background:var(--bd2)}
+.badge{display:inline-block;padding:2px 7px;border-radius:10px;font-size:.65rem;font-family:var(--fm);font-weight:600}
+.bdn{background:rgba(0,230,118,.15);color:var(--gr)}.bsk{background:rgba(255,215,64,.15);color:var(--yw)}.bpr{background:rgba(255,68,68,.15);color:var(--rd)}
+#dm{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.7);display:none;align-items:flex-end}
+#dm.open{display:flex}
+.dp{background:var(--bg2);border-radius:20px 20px 0 0;width:100%;max-height:92vh;overflow-y:auto;padding:0 0 24px;border-top:1px solid var(--bd2)}
+.dh{width:36px;height:4px;background:var(--bd2);border-radius:2px;margin:12px auto 8px}
+.dhdr{padding:8px 16px 12px;border-bottom:1px solid var(--bd)}
+.dnr{font-family:var(--fm);font-size:.72rem;color:var(--ac);margin-bottom:4px}
+.dname{font-size:1.05rem;font-weight:600;color:var(--t1)}
+.dblk{font-size:.75rem;color:var(--t3);margin-top:3px}
+.dtm{font-family:var(--fm);font-size:.78rem;color:var(--yw);margin-top:4px}
+.vsec{padding:10px 16px 4px}
+.vgt{font-family:var(--fm);font-size:.65rem;color:var(--t3);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid var(--bd)}
+.vchips{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px}
+.vc{display:inline-flex;align-items:center;gap:4px;padding:4px 8px;border-radius:6px;font-family:var(--fm);font-size:.72rem;border:1px solid transparent}
+.vc.op{background:rgba(0,230,118,.1);border-color:rgba(0,230,118,.3);color:var(--gr)}
+.vc.nu{background:rgba(0,200,240,.08);border-color:rgba(0,200,240,.25);color:var(--ac)}
+.vc.tg{background:rgba(255,215,64,.1);border-color:rgba(255,215,64,.3);color:var(--yw)}
+.vc.ot{background:rgba(180,142,255,.1);border-color:rgba(180,142,255,.3);color:var(--pu)}
+.dacts{padding:14px 16px 6px;display:flex;gap:8px}
+.ab{flex:1;padding:11px 6px;border:none;border-radius:8px;cursor:pointer;font-size:.82rem;font-weight:600;font-family:var(--fs);transition:opacity .2s}
+.ab:hover{opacity:.85}
+.adn{background:var(--gr);color:#000}.ask{background:var(--yw);color:#000}.apr{background:var(--rd);color:#fff}
+.dcom{padding:4px 16px}
+.dcom textarea{width:100%;background:var(--bg3);border:1px solid var(--bd2);border-radius:8px;color:var(--t1);font-size:.85rem;padding:10px 12px;resize:none;height:68px;outline:none;font-family:var(--fs)}
+.dcom textarea:focus{border-color:var(--ac)}
+.dbtns{padding:8px 16px;display:flex;gap:8px}
+.bx{flex:1;padding:9px;background:var(--bg3);border:1px solid var(--bd2);border-radius:8px;color:var(--t2);font-size:.82rem;cursor:pointer;font-family:var(--fm);transition:background .2s;text-align:center}
+.bx:hover{background:var(--bg4)}
+#tm{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.8);display:none;align-items:center;justify-content:center}
+#tm.open{display:flex}
+.tmp{background:var(--bg2);border:1px solid var(--bd2);border-radius:16px;padding:32px 28px;text-align:center;min-width:260px}
+.tmnm{font-size:.8rem;color:var(--t2);margin-bottom:8px}
+.tmdc{font-family:var(--fm);font-size:3rem;font-weight:700;color:var(--ac);letter-spacing:2px;margin-bottom:4px}
+.tmtg{font-size:.78rem;color:var(--t3);margin-bottom:20px}
+.tmbs{display:flex;gap:10px;justify-content:center}
+.tb2{padding:10px 22px;border:none;border-radius:8px;cursor:pointer;font-size:.88rem;font-weight:600;font-family:var(--fs)}
+.tb2s{background:var(--gr);color:#000}.tb2e{background:var(--rd);color:#fff}.tb2c{background:var(--bg3);color:var(--t2);border:1px solid var(--bd2)}
+#sp{position:fixed;inset:0;z-index:250;background:rgba(0,0,0,.75);display:none;align-items:flex-end}
+#sp.open{display:flex}
+.spp{background:var(--bg2);border-radius:20px 20px 0 0;width:100%;max-height:80vh;overflow-y:auto;padding:0 0 24px;border-top:1px solid var(--bd2)}
+.spsr{position:sticky;top:0;background:var(--bg2);padding:12px 16px;border-bottom:1px solid var(--bd)}
+.spsr input{width:100%;background:var(--bg3);border:1px solid var(--bd2);border-radius:8px;color:var(--t1);font-size:.9rem;padding:9px 12px;outline:none;font-family:var(--fs)}
+.spsr input:focus{border-color:var(--ac)}
+.spit{padding:11px 16px;border-bottom:1px solid var(--bd);cursor:pointer;transition:background .15s}
+.spit:hover{background:var(--bg3)}
+.spinr{font-family:var(--fm);font-size:.68rem;color:var(--ac)}
+.spin{font-size:.88rem;color:var(--t1)}
+.spib{font-size:.7rem;color:var(--t3)}
+.uefrm{background:var(--bg2);border:1px solid var(--bd);border-radius:10px;padding:16px;margin-bottom:12px}
+.row{margin-bottom:12px}
+.row label{display:block;font-size:.72rem;color:var(--t2);margin-bottom:5px;font-family:var(--fm);letter-spacing:.5px}
+.row input,.row textarea,.row select{width:100%;background:var(--bg3);border:1px solid var(--bd2);border-radius:7px;color:var(--t1);font-size:.88rem;padding:9px 12px;outline:none;font-family:var(--fs);resize:none}
+.row textarea{height:72px}
+.row input:focus,.row textarea:focus,.row select:focus{border-color:var(--ac)}
+.row select option{background:var(--bg3)}
+.bgen{width:100%;padding:12px;background:var(--ac);color:#000;border:none;border-radius:8px;font-size:.95rem;font-weight:600;cursor:pointer;font-family:var(--fs);margin-bottom:8px;transition:opacity .2s}
+.bgen:hover{opacity:.85}
+.bexp{width:100%;padding:10px;background:var(--bg2);border:1px solid var(--bd2);border-radius:8px;font-size:.85rem;color:var(--t2);cursor:pointer;font-family:var(--fm);transition:border-color .2s;margin-bottom:6px}
+.bexp:hover{border-color:var(--ac);color:var(--ac)}
+.rbox{background:var(--bg3);border:1px solid var(--bd2);border-radius:10px;padding:14px;font-family:var(--fm);font-size:.78rem;color:var(--t1);line-height:1.6;white-space:pre-wrap;margin-top:12px}
+.scard{background:var(--bg2);border:1px solid var(--bd);border-radius:10px;padding:14px;margin-bottom:8px}
+.slbl{font-size:.78rem;color:var(--t2);margin-bottom:6px}
+.sval{font-family:var(--fm);font-size:1.5rem;font-weight:700;color:var(--ac)}
+.sbrw{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.sblb{font-size:.75rem;color:var(--t2);min-width:140px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sbtr{flex:1;height:8px;background:var(--bg3);border-radius:4px;overflow:hidden}
+.sbfl{height:100%;background:var(--rd);border-radius:4px}
+.sbct{font-family:var(--fm);font-size:.7rem;color:var(--t3);min-width:24px;text-align:right}
+.apick{display:flex;gap:8px;margin-bottom:14px}
+.apb{flex:1;background:var(--bg2);border:1px solid var(--bd);border-radius:8px;padding:10px;cursor:pointer;transition:border-color .2s}
+.apb:hover{border-color:var(--ac)}
+.apl{font-size:.68rem;color:var(--t3);margin-bottom:3px;font-family:var(--fm)}
+.apv{font-size:.85rem;color:var(--t1);font-weight:500}
+.cgrid{display:flex;gap:8px}
+.ccol{flex:1;min-width:0}
+.chdr{font-family:var(--fm);font-size:.7rem;color:var(--ac);padding:6px 8px;background:var(--bg3);border-radius:6px;margin-bottom:6px;text-overflow:ellipsis;overflow:hidden;white-space:nowrap}
+.cv{display:flex;justify-content:space-between;align-items:center;padding:4px 8px;font-family:var(--fm);font-size:.72rem;border-radius:5px;margin-bottom:3px}
+.cv.m{background:rgba(0,230,118,.07);color:var(--gr)}.cv.d{background:rgba(255,68,68,.1);color:var(--rd)}.cv.o{background:rgba(255,215,64,.08);color:var(--yw)}
+#toast{position:fixed;bottom:70px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--bg3);border:1px solid var(--bd2);border-radius:8px;padding:8px 18px;font-size:.82rem;color:var(--t1);z-index:500;opacity:0;transition:opacity .3s,transform .3s;pointer-events:none;white-space:nowrap}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.empty{text-align:center;padding:40px 20px;color:var(--t3);font-size:.88rem}
+#pane-f.active{display:flex}
+#ri-wrap{flex:1;overflow:auto;-webkit-overflow-scrolling:touch}
+#ri-inner{position:relative;display:inline-block}
+#ri-img{display:block;width:1200px;height:auto;max-width:none}
+.vdot{position:absolute;width:14px;height:14px;border-radius:50%;border:1.5px solid rgba(0,0,0,.5);transform:translate(-50%,-50%);cursor:pointer;z-index:10;transition:transform .15s}
+.vdot:hover,.vdot:active{transform:translate(-50%,-50%) scale(1.6)}
+.vdot.op{background:var(--gr);box-shadow:0 0 5px rgba(0,230,118,.6)}
+.vdot.nu{background:var(--ac);box-shadow:0 0 5px rgba(0,200,240,.6)}
+.vdot.tg{background:var(--yw)}.vdot.ot{background:var(--pu)}
+.vdot.cl{background:rgba(74,93,114,.3);border-color:rgba(74,93,114,.35)}
+.f-hdr{padding:6px 12px;background:var(--bg2);border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:8px;flex-shrink:0}
+.f-hdr-t{flex:1;font-size:.72rem;color:var(--t2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:var(--fm)}
+</style>
+</head>
+<body>
+<div id="loading"><div class="ld-logo">◈ AFL</div><div class="ld-sub">VSP laden…</div></div>
+<div id="login">
+  <div class="lg-logo">◈ AFL</div>
+  <div class="lg-brand">Ventilstellungsplan · CIP/SIP</div>
+  <div class="lg-sub">Maschine 54235 · FFV12024 · Bau 235 · Roche Kaiseraugst</div>
+  <div class="lg-card">
+    <div class="lg-title">Anmeldung</div>
+    <div class="fld"><label>Name / Kürzel</label><input id="iname" type="text" placeholder="z.B. M. Müller" autocomplete="off"></div>
+    <div class="fld"><label>Schicht</label>
+      <div class="tgl-grp">
+        <div class="tgl" data-s="Früh" onclick="selS(this)">Früh</div>
+        <div class="tgl" data-s="Spät" onclick="selS(this)">Spät</div>
+        <div class="tgl" data-s="Nacht" onclick="selS(this)">Nacht</div>
+      </div>
+    </div>
+    <div class="fld"><label>Funktion</label>
+      <div class="tgl-grp">
+        <div class="tgl" data-f="Automatiker" onclick="selF(this)">Automatiker</div>
+        <div class="tgl" data-f="Mechaniker" onclick="selF(this)">Mechaniker</div>
+      </div>
+    </div>
+    <button class="btn-lg" onclick="doLogin()">Anmelden</button>
+  </div>
+</div>
+<div id="app">
+  <div class="topbar">
+    <div class="tb-brand">◈ AFL · CIP/SIP VSP</div>
+    <div class="tb-user"><span id="tu"></span><span id="ti" style="color:var(--t3)"></span></div>
+    <button class="btn-out" onclick="doLogout()">⏻</button>
+  </div>
+  <div class="content">
+    <div class="pane active" id="pane-p">
+      <div class="sec">Programme · Maschine 54235</div>
+      <div class="pgrid" id="pgrid"></div>
+    </div>
+    <div class="pane" id="pane-s">
+      <div id="scont"><div class="empty">◈<br>Kein Programm ausgewählt.</div></div>
+    </div>
+    <div class="pane" id="pane-a">
+      <div class="sec">Ventil-Vergleich</div>
+      <div class="apick">
+        <div class="apb" onclick="openPicker('A')"><div class="apl">SCHRITT A</div><div class="apv" id="pav">— wählen —</div></div>
+        <div class="apb" onclick="openPicker('B')"><div class="apl">SCHRITT B</div><div class="apv" id="pbv">— wählen —</div></div>
+      </div>
+      <div id="cres"></div>
+    </div>
+    <div class="pane" id="pane-u">
+      <div class="sec">Schichtübergabe</div>
+      <div class="uefrm">
+        <div class="row"><label>Programm</label><select id="uprog"><option value="">— wählen —</option></select></div>
+        <div class="row"><label>Aktueller Schritt</label><input id="ustep" type="text" placeholder="z.B. Schritt 42"></div>
+        <div class="row"><label>Offene Punkte / Probleme</label><textarea id="uiss" placeholder="z.B. Druckabfall bei V8.2…"></textarea></div>
+        <div class="row"><label>Besondere Vorkommnisse</label><textarea id="unts" placeholder="z.B. Verzögerung…"></textarea></div>
+        <button class="bgen" onclick="genRep()">Bericht generieren</button>
+        <button class="bexp" onclick="exportSync()">⬆ Sync-Code exportieren</button>
+        <button class="bexp" onclick="importSync()">⬇ Sync-Code importieren</button>
+      </div>
+      <div id="repout"></div>
+    </div>
+    <div class="pane" id="pane-st">
+      <div class="sec">Statistik</div>
+      <div id="stcont"></div>
+    </div>
+    <div class="pane" id="pane-f" style="padding:0">
+      <div class="f-hdr">
+        <div class="f-hdr-t" id="f-lbl">◈ Schritt wählen oder im Schritte-Tab öffnen</div>
+        <button class="btn-out" onclick="openFlowPicker()">Schritt</button>
+      </div>
+      <div id="ri-wrap"><div id="ri-inner"><img id="ri-img" src="ri.webp" alt="RI-Fließschema" onload="fRiOk=true;rFlowDots()"></div></div>
+    </div>
+  </div>
+  <div class="tabbar">
+    <button class="tab active" onclick="sw('p',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Prog.</button>
+    <button class="tab" onclick="sw('s',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>Schritte</button>
+    <button class="tab" onclick="sw('a',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Analyse</button>
+    <button class="tab" onclick="sw('u',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Übergabe</button>
+    <button class="tab" onclick="sw('st',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Statistik</button>
+    <button class="tab" onclick="sw('f',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="2" y="3" width="5" height="5" rx="1"/><rect x="17" y="3" width="5" height="5" rx="1"/><rect x="2" y="16" width="5" height="5" rx="1"/><rect x="17" y="16" width="5" height="5" rx="1"/><line x1="7" y1="5.5" x2="17" y2="5.5"/><line x1="7" y1="18.5" x2="17" y2="18.5"/><line x1="4.5" y1="8" x2="4.5" y2="16"/><line x1="19.5" y1="8" x2="19.5" y2="16"/></svg>Schema</button>
+  </div>
+</div>
+<div id="dm"><div class="dp" id="dpanel">
+  <div class="dh"></div>
+  <div class="dhdr"><div class="dnr" id="dnr"></div><div class="dname" id="dname"></div><div class="dblk" id="dblk"></div><div class="dtm" id="dtm"></div></div>
+  <div id="dvalves"></div>
+  <div class="dacts">
+    <button class="ab adn" onclick="setSt('done')">✓ Erledigt</button>
+    <button class="ab ask" onclick="setSt('skip')">↷ Überspringen</button>
+    <button class="ab apr" onclick="setSt('problem')">⚠ Problem</button>
+  </div>
+  <div class="dcom"><textarea id="dcmt" placeholder="Kommentar…" oninput="saveCmt()"></textarea></div>
+  <div class="dbtns">
+    <button class="bx" onclick="openTm()">⏱ Timer</button>
+    <button class="bx" onclick="trigPh()">📷 Foto</button>
+    <button class="bx" onclick="goSchema()">◈ Schema</button>
+    <input type="file" id="phi" accept="image/*" capture="environment" onchange="addPh(event)" style="display:none">
+  </div>
+  <div id="dphotos" style="padding:0 16px 8px;display:flex;flex-wrap:wrap;gap:6px"></div>
+  <div style="padding:8px 16px"><button class="bexp" onclick="closeD()">Schließen</button></div>
+</div></div>
+<div id="tm"><div class="tmp">
+  <div class="tmnm" id="tmnm"></div>
+  <div class="tmdc" id="tmdc">00:00</div>
+  <div class="tmtg" id="tmtg"></div>
+  <div class="tmbs">
+    <button class="tb2 tb2s" id="tmbtn" onclick="tmToggle()">Start</button>
+    <button class="tb2 tb2c" onclick="closeTm()">Schließen</button>
+  </div>
+</div></div>
+<div id="sp"><div class="spp">
+  <div class="spsr"><input id="spinp" type="text" placeholder="Schritt suchen…" oninput="fltPk()" autocomplete="off"></div>
+  <div id="splist"></div>
+</div></div>
+<div id="toast"></div>
+<script>
+const SK='afl54235';
+let ST={},U=null,CP=null,CS=null,tmI=null,tmS=0,tmP=0,tmR=false,pkT='A',cA=null,cB=null;
+function ld(){try{ST=JSON.parse(localStorage.getItem(SK)||'{}');}catch(e){ST={};}if(!ST.steps)ST.steps={};if(!ST.user)ST.user=null;}
+function sv(){localStorage.setItem(SK,JSON.stringify(ST));}
+let sV='',sF='';
+function selS(el){document.querySelectorAll('[data-s]').forEach(b=>b.classList.remove('as'));el.classList.add('as');sV=el.dataset.s;}
+function selF(el){document.querySelectorAll('[data-f]').forEach(b=>b.classList.remove('af'));el.classList.add('af');sF=el.dataset.f;}
+function doLogin(){
+  const n=document.getElementById('iname').value.trim();
+  if(!n){toast('Bitte Namen eingeben');return;}
+  if(!sV){toast('Bitte Schicht wählen');return;}
+  if(!sF){toast('Bitte Funktion wählen');return;}
+  U={name:n,schicht:sV,funktion:sF,loginTime:Date.now()};
+  ST.user=U;sv();
+  document.getElementById('login').style.display='none';
+  document.getElementById('app').classList.add('show');
+  document.getElementById('tu').textContent=n;
+  document.getElementById('ti').textContent=sV+' · '+sF;
+  init();
+}
+function doLogout(){if(!confirm('Abmelden?'))return;U=null;document.getElementById('app').classList.remove('show');document.getElementById('login').style.display='flex';}
+function init(){rProgs();bUprog();rStats();}
+function sw(n,el){document.querySelectorAll('.pane').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));document.getElementById('pane-'+n).classList.add('active');el.classList.add('active');if(n==='st')rStats();if(n==='f')rFlowDots();}
+const GO=['Medienventile','Sicherheitsventile','Vereinzelungsventile','Füllstation','Nachbegasen','Schließbegasen','Medieneinheit/WT','Ventile','Produktfilter','SF Dosierbehälter','SF Begasungsstationen','Nadelventil/Filtertest','Ablauf','Ausgänge extern','Eingänge extern'];
+function vcls(c){if(!c)return'ot';const u=String(c).toUpperCase().trim();if(u==='X'||(u.startsWith('X')&&isNaN(u.slice(1))))return'op';if(u==='0/1')return'tg';if(!isNaN(u))return'nu';return'op';}
+function rProgs(){
+  const g=document.getElementById('pgrid');g.innerHTML='';
+  for(const[pid,p]of Object.entries(VSP.progs)){
+    if(p.name==='Reserve')continue;
+    const s=p.steps,dn=s.filter(x=>ST.steps[x]?.status==='done').length,pr=s.filter(x=>ST.steps[x]?.status==='problem').length,pct=Math.round(dn/s.length*100);
+    const d=document.createElement('div');d.className='pcard'+(CP===pid?' sel':'');
+    d.innerHTML=`<div class="pnum">PROG ${pid}</div><div class="pname">${p.name}</div><div class="pmeta">${s.length} Schritte${pr?` · <span style="color:var(--rd)">${pr} Prob.</span>`:''}</div><div class="ppct ${pct===100?'dn':''}">${pct}%</div>`;
+    d.onclick=()=>selP(pid);g.appendChild(d);
+  }
+}
+function selP(pid){CP=pid;rProgs();rSteps();sw('s',document.querySelectorAll('.tab')[1]);}
+function rSteps(){
+  const c=document.getElementById('scont');
+  if(!CP||!VSP.progs[CP]){c.innerHTML='<div class="empty">◈<br>Kein Programm ausgewählt.</div>';return;}
+  const p=VSP.progs[CP],s=p.steps,dn=s.filter(x=>ST.steps[x]?.status==='done').length,pr=s.filter(x=>ST.steps[x]?.status==='problem').length;
+  let h=`<div class="phdr"><div class="phdr-n">Prog. ${CP} · ${p.name}</div><div class="phdr-m">${s.length} Schritte · ${dn} erledigt${pr?` · <span style="color:var(--rd)">${pr} Prob.</span>`:''}</div></div><div class="slist">`;
+  let lb='';
+  for(const seq of s){
+    const st=VSP.s[String(seq)];if(!st)continue;
+    const bn=VSP.bl[st.b];
+    if(bn!==lb){h+=`<div class="sec" style="margin-top:10px">${bn}</div>`;lb=bn;}
+    const ss=ST.steps[seq]||{},status=ss.status||'';
+    h+=`<div class="sc ${status}" onclick="openD(${seq})"><div class="shdr"><div class="snr">${st.nr}</div><div class="si"><div class="sn">${st.n||'—'}</div>${st.t?`<div style="font-size:.68rem;color:var(--t3)">⏱ ${st.t} min</div>`:''}</div><div class="ss">${st.o.length?`<span style="font-family:var(--fm);font-size:.65rem;color:var(--t3)">${st.o.length}V</span>`:''} ${status==='done'?'<span class="badge bdn">✓</span>':status==='skip'?'<span class="badge bsk">↷</span>':status==='problem'?'<span class="badge bpr">⚠</span>':'<div class="sdot"></div>'}</div></div></div>`;
+  }
+  h+='</div>';c.innerHTML=h;
+}
+function openD(seq){
+  CS=seq;const s=VSP.s[String(seq)];if(!s)return;
+  const ss=ST.steps[seq]||{};
+  document.getElementById('dnr').textContent=`Schritt ${s.nr} · Seq. ${seq}`;
+  document.getElementById('dname').textContent=s.n||'—';
+  document.getElementById('dblk').textContent=VSP.bl[s.b]||'';
+  document.getElementById('dtm').textContent=s.t?`⏱ Sollzeit: ${s.t} min`:'';
+  document.getElementById('dcmt').value=ss.comment||'';
+  const grp={};
+  for(const[v,c]of s.o){const g=VSP.vi[v]?.g||'Sonstige';if(!grp[g])grp[g]=[];grp[g].push([v,c]);}
+  const og=[...GO.filter(g=>grp[g]),...Object.keys(grp).filter(g=>!GO.includes(g))];
+  let vh='';
+  for(const g of og){if(!grp[g])continue;vh+=`<div class="vsec"><div class="vgt">${g}</div><div class="vchips">`;for(const[v,c]of grp[g])vh+=`<div class="vc ${vcls(c)}" title="${v}: ${VSP.vi[v]?.d||''}">${v} <span style="font-size:.65rem;opacity:.8">${c}</span></div>`;vh+='</div></div>';}
+  if(!vh)vh='<div style="padding:12px 16px;color:var(--t3);font-size:.82rem">Keine Ventilstellungen.</div>';
+  document.getElementById('dvalves').innerHTML=vh;
+  const ph=ss.photos||[];
+  document.getElementById('dphotos').innerHTML=ph.map((p,i)=>`<img src="${p}" style="width:64px;height:64px;object-fit:cover;border-radius:6px;border:1px solid var(--bd2);cursor:pointer" onclick="vPh(${i})">`).join('');
+  document.getElementById('dm').classList.add('open');
+  document.getElementById('dpanel').scrollTop=0;
+}
+function closeD(){document.getElementById('dm').classList.remove('open');}
+function goSchema(){closeD();sw('f',document.querySelectorAll('.tab')[5]);rFlowDots();}
+function setSt(st){if(!CS)return;if(!ST.steps[CS])ST.steps[CS]={};ST.steps[CS].status=st;ST.steps[CS].statusTime=Date.now();ST.steps[CS].statusUser=U?.name||'';sv();rSteps();closeD();toast(st==='done'?'✓ Erledigt':st==='skip'?'↷ Übersprungen':'⚠ Problem gemeldet');}
+function saveCmt(){if(!CS)return;if(!ST.steps[CS])ST.steps[CS]={};ST.steps[CS].comment=document.getElementById('dcmt').value;sv();}
+function trigPh(){document.getElementById('phi').click();}
+function addPh(ev){const f=ev.target.files[0];if(!f||!CS)return;const r=new FileReader();r.onload=e=>{if(!ST.steps[CS])ST.steps[CS]={};if(!ST.steps[CS].photos)ST.steps[CS].photos=[];ST.steps[CS].photos.push(e.target.result);sv();const ph=ST.steps[CS].photos;document.getElementById('dphotos').innerHTML=ph.map((p,i)=>`<img src="${p}" style="width:64px;height:64px;object-fit:cover;border-radius:6px;border:1px solid var(--bd2);cursor:pointer" onclick="vPh(${i})">`).join('');toast('📷 Foto gespeichert');};r.readAsDataURL(f);ev.target.value='';}
+function vPh(i){if(!CS)return;const p=ST.steps[CS]?.photos;if(!p||!p[i])return;const w=window.open('');w.document.write(`<body style="margin:0;background:#000;display:flex;align-items:center;justify-content:center;height:100vh"><img src="${p[i]}" style="max-width:100%;max-height:100%"></body>`);}
+function openTm(){if(!CS)return;const s=VSP.s[String(CS)];document.getElementById('tmnm').textContent=s?.n||'';document.getElementById('tmtg').textContent=s?.t?`Sollzeit: ${s.t} min`:'';tmR=false;tmS=0;tmP=0;document.getElementById('tmdc').textContent='00:00';document.getElementById('tmbtn').textContent='Start';document.getElementById('tmbtn').className='tb2 tb2s';document.getElementById('tm').classList.add('open');}
+function tmToggle(){if(!tmR){tmR=true;tmS=Date.now()-tmP;tmI=setInterval(()=>{const e=Math.floor((Date.now()-tmS)/1000);document.getElementById('tmdc').textContent=String(Math.floor(e/60)).padStart(2,'0')+':'+String(e%60).padStart(2,'0');},500);document.getElementById('tmbtn').textContent='Stopp';document.getElementById('tmbtn').className='tb2 tb2e';}else{tmR=false;tmP=Date.now()-tmS;clearInterval(tmI);document.getElementById('tmbtn').textContent='Weiter';document.getElementById('tmbtn').className='tb2 tb2s';}}
+function closeTm(){clearInterval(tmI);tmR=false;document.getElementById('tm').classList.remove('open');}
+function openPicker(t){pkT=t;document.getElementById('spinp').value='';bkPl('');document.getElementById('sp').classList.add('open');document.getElementById('spinp').focus();}
+function bkPl(q){const l=document.getElementById('splist');const qq=q.toLowerCase();let h='';for(const[seq,s]of Object.entries(VSP.s)){if(qq&&!s.n.toLowerCase().includes(qq)&&!(VSP.bl[s.b]||'').toLowerCase().includes(qq)&&!seq.includes(qq))continue;h+=`<div class="spit" onclick="pkSt('${seq}')"><div class="spinr">Schritt ${s.nr} · Seq ${seq}</div><div class="spin">${s.n||'—'}</div><div class="spib">${VSP.bl[s.b]||''}</div></div>`;}l.innerHTML=h||'<div style="padding:20px;color:var(--t3);text-align:center">Keine Treffer</div>';}
+function fltPk(){bkPl(document.getElementById('spinp').value);}
+function pkSt(seq){document.getElementById('sp').classList.remove('open');const s=VSP.s[seq];if(!s)return;if(pkT==='A'){cA=seq;document.getElementById('pav').textContent=`${s.nr}: ${s.n}`;}else if(pkT==='B'){cB=seq;document.getElementById('pbv').textContent=`${s.nr}: ${s.n}`;}else if(pkT==='F'){CS=seq;rFlowDots();return;}if(cA&&cB)rCmp();}
+function rCmp(){const sA=VSP.s[cA],sB=VSP.s[cB];if(!sA||!sB)return;const mA=Object.fromEntries(sA.o),mB=Object.fromEntries(sB.o);const av=[...new Set([...Object.keys(mA),...Object.keys(mB)])].sort();let ca='',cb='',sm=0,df=0,oA=0,oB=0;for(const v of av){const a=mA[v],b=mB[v];if(a&&b){const c=a===b?'m':'d';if(a===b)sm++;else df++;ca+=`<div class="cv ${c}"><span>${v}</span><span>${a}</span></div>`;cb+=`<div class="cv ${c}"><span>${v}</span><span>${b}</span></div>`;}else if(a){oA++;ca+=`<div class="cv o"><span>${v}</span><span>${a}</span></div>`;cb+=`<div class="cv" style="opacity:.2"><span>${v}</span><span>—</span></div>`;}else{oB++;ca+=`<div class="cv" style="opacity:.2"><span>${v}</span><span>—</span></div>`;cb+=`<div class="cv o"><span>${v}</span><span>${b}</span></div>`;}}document.getElementById('cres').innerHTML=`<div style="font-size:.72rem;color:var(--t3);margin-bottom:8px;font-family:var(--fm)">✓ ${sm} · ≠ ${df} · A ${oA} · B ${oB}</div><div class="cgrid"><div class="ccol"><div class="chdr">A · ${sA.n}</div>${ca}</div><div class="ccol"><div class="chdr">B · ${sB.n}</div>${cb}</div></div>`;}
+function bUprog(){const s=document.getElementById('uprog');s.innerHTML='<option value="">— wählen —</option>';for(const[pid,p]of Object.entries(VSP.progs)){if(p.name==='Reserve')continue;const o=document.createElement('option');o.value=pid;o.textContent=`Prog ${pid}: ${p.name}`;s.appendChild(o);}}
+function genRep(){const pid=document.getElementById('uprog').value,step=document.getElementById('ustep').value.trim(),iss=document.getElementById('uiss').value.trim(),nts=document.getElementById('unts').value.trim();const now=new Date(),ts=now.toLocaleString('de-DE',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});const p=pid?VSP.progs[pid]:null,ps=p?p.steps:[],dn=ps.filter(s=>ST.steps[s]?.status==='done').length,pr=ps.filter(s=>ST.steps[s]?.status==='problem').length,sk=ps.filter(s=>ST.steps[s]?.status==='skip').length;const prs=ps.filter(s=>ST.steps[s]?.status==='problem').map(s=>{const x=VSP.s[String(s)];const c=ST.steps[s]?.comment||'';return`  · Schritt ${x?.nr||s}: ${x?.n||'?'}${c?' → '+c:''}`;});let r=`╔══════════════════════════════════════════════╗\n║  SCHICHTÜBERGABE · AFL CIP/SIP VSP          ║\n║  Maschine 54235 · FFV12024 · Bau 235        ║\n╚══════════════════════════════════════════════╝\n\nDatum / Zeit : ${ts}\nÜbergabe von : ${U?.name||'?'} (${U?.schicht||'?'} · ${U?.funktion||'?'})\n${p?'Programm     : Prog '+pid+' · '+p.name:''}\n${step?'Aktueller Schr.: '+step:''}\n\n────────────────────────────────────────────\nFORTSCHRITT\n────────────────────────────────────────────\n${p?`Gesamt: ${ps.length} · Erledigt: ${dn} · Übersprungen: ${sk} · Probleme: ${pr}`:'Kein Programm.'}\n${prs.length?'\n────────────────────────────────────────────\nPROBLEME\n────────────────────────────────────────────\n'+prs.join('\n'):''}${iss?'\n\n────────────────────────────────────────────\nOFFENE PUNKTE\n────────────────────────────────────────────\n'+iss:''}${nts?'\n\n────────────────────────────────────────────\nVORKOMNISSE\n────────────────────────────────────────────\n'+nts:''}\n\n────────────────────────────────────────────\nGeneriert: ${ts} · ◈ AFL VSP Roche Kaiseraugst\n────────────────────────────────────────────`;
+document.getElementById('repout').innerHTML=`<div class="rbox">${r.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div><button class="bexp" style="margin-top:8px" onclick="if(window._r)navigator.clipboard?.writeText(window._r).then(()=>toast('Kopiert!'))">Bericht kopieren</button>`;window._r=r;toast('Bericht generiert');}
+function exportSync(){const d={v:1,steps:ST.steps,ts:Date.now(),user:U?.name||''};prompt('Sync-Code:',btoa(unescape(encodeURIComponent(JSON.stringify(d)))));}
+function importSync(){const c=prompt('Sync-Code:');if(!c)return;try{const d=JSON.parse(decodeURIComponent(escape(atob(c.trim()))));if(d.steps){ST.steps={...ST.steps,...d.steps};sv();rSteps();rStats();toast('✓ Sync OK');}}catch(e){toast('Ungültiger Code');}}
+function rStats(){const c=document.getElementById('stcont');const all=Object.values(ST.steps);const td=all.filter(s=>s.status==='done').length,tp=all.filter(s=>s.status==='problem').length,ts2=all.filter(s=>s.status==='skip').length;const pb={};for(const[seq,s]of Object.entries(ST.steps)){if(s.status!=='problem')continue;for(const[pid,p]of Object.entries(VSP.progs)){if(p.steps.includes(parseInt(seq))){pb[pid]=(pb[pid]||0)+1;break;}}}const mx=Math.max(1,...Object.values(pb));let pr='';for(const[pid,cnt]of Object.entries(pb).sort((a,b)=>b[1]-a[1]).slice(0,8)){const p=VSP.progs[pid];if(!p)continue;pr+=`<div class="sbrw"><div class="sblb" title="${p.name}">P${pid}: ${p.name}</div><div class="sbtr"><div class="sbfl" style="width:${Math.round(cnt/mx*100)}%"></div></div><div class="sbct">${cnt}</div></div>`;}c.innerHTML=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px"><div class="scard"><div class="slbl">Erledigt</div><div class="sval" style="color:var(--gr)">${td}</div></div><div class="scard"><div class="slbl">Probleme</div><div class="sval" style="color:var(--rd)">${tp}</div></div><div class="scard"><div class="slbl">Übersprungen</div><div class="sval" style="color:var(--yw)">${ts2}</div></div><div class="scard"><div class="slbl">Schritte</div><div class="sval">${Object.keys(VSP.s).length}</div></div></div>${pr?`<div class="scard"><div class="slbl" style="margin-bottom:10px">Probleme nach Programm</div>${pr}</div>`:'<div class="empty">✓ Keine Probleme.</div>'}`;}
+const VP={"E_ext3":[87.49,48.44],"V5.1":[14.42,37.35],"V5.2":[20.34,37.37],"V5.4":[23.35,38.43],"V5.3":[25.87,37.36],"V5.13":[25.36,35.91],"V5.5":[22.89,39.18],"V3.24":[11.4,44.94],"V3.21":[13.52,47.46],"V3.18":[15.85,44.97],"V3.9":[22.52,47.46],"V3.12":[20.4,44.96],"V3.14":[18.83,44.95],"V3.23":[12.06,47.46],"V3.20":[14.35,44.97],"V3.17":[16.59,47.46],"V3.8":[23.34,44.96],"V3.11":[21.04,47.46],"V3.15":[18.07,47.49],"V3.22":[12.87,44.97],"V3.19":[15.11,47.46],"V3.16":[17.36,44.96],"V3.7":[24.07,47.46],"V3.10":[21.89,44.96],"V3.13":[19.56,47.45],"V3.3":[27.02,47.45],"V3.2":[27.8,44.95],"V3.4":[26.32,44.95],"V3.1":[28.53,47.49],"V3.5":[25.56,47.49],"V3.6":[24.84,44.94],"V5.6":[10.67,43.32],"V4.1":[10.07,69.85],"V8.4":[63.81,14.23],"V8.1":[59.85,9.28],"V8.9":[58.23,20.27],"E_ext2":[62.08,8.74],"V12.16":[80.92,48.05],"V13.3":[83.37,47.08],"V12.14":[82.72,47.32],"V7.1":[41.41,76.91],"V14.6":[79.63,77.44],"V14.4":[77.16,77.11],"V14.3":[74.14,76.95],"V5.14":[83.98,80.23],"V14.12":[85.1,80.92],"V14.13":[84.2,80.92],"V12.6":[83.18,44.37],"V7.2":[42.48,76.9],"V14.5":[72.07,76.89],"V14.10":[85.37,80.16],"V5.12":[75.17,76.94],"V14.8":[81.15,80.17],"V14.7":[82.13,80.16],"V14.9":[83.06,80.37],"V6.2":[34.22,72.52],"V5.7":[11.69,73.8],"V6.1":[33.73,74.07],"V6.3":[35.37,74.04],"V5.11":[37.85,76.95],"V6.7":[36.26,74.04],"V14.1":[76.03,76.96],"V6.5":[55.02,73.37],"V5.9":[38.74,76.89],"V4.7":[9.64,75.29],"V4.8":[10.72,76.9],"V4.13":[14.2,76.9],"V4.14":[15.13,76.91],"V14.11":[16.29,76.95],"V7.6":[18.39,76.91],"V7.5":[19.27,76.91],"V6.8":[20.47,76.9],"V12.9":[78.64,46.15],"V12.3":[83.9,43.7],"V12.1":[84.68,39.26],"V13.6":[88.66,83.39],"V14.15":[86.21,84.01],"V14.14":[87.0,84.0],"V13.5":[88.13,83.66],"V14.2":[79.64,75.76],"V10.9":[60.13,45.21],"V11.14":[63.91,47.2],"V11.12":[65.71,46.53],"V11.15":[66.41,46.29],"V11.2":[66.59,43.08],"V11.6":[66.1,43.94],"V11.9":[66.39,44.42],"V11.5":[63.91,43.13],"V10.1":[58.55,43.94],"V12.10":[79.2,46.38],"V10.8":[59.85,44.65],"V10.3":[61.87,44.82],"V11.16":[64.79,47.03],"V11.11":[67.06,46.27],"V12.2":[84.96,39.93],"V13.4":[81.76,47.8],"V11.4":[67.06,43.14],"V10.2":[61.94,41.83],"V10.4":[61.37,41.82],"V10.6":[59.48,44.01],"V10.7":[61.26,43.95],"V11.13":[64.39,46.33],"V12.12":[84.06,47.09],"V12.8":[83.41,45.47],"V11.1":[63.95,42.41],"V11.7":[63.42,45.36],"V11.8":[64.91,45.4],"V11.10":[66.92,45.38],"V12.7":[82.07,46.14],"V12.11":[83.85,46.16],"V12.15":[81.34,47.13],"V10.5":[61.26,42.67],"V11.3":[64.57,43.5],"V13.1":[71.82,46.75],"V13.2":[75.67,46.79],"V12.5":[80.93,44.39],"V12.4":[81.53,44.69],"V1.2":[59.6,17.28],"V8.6":[60.8,17.07],"V1.5":[65.01,11.3],"V8.2":[61.64,9.34],"V8.3":[60.91,13.5],"V1.6":[65.5,12.22],"V1.4":[65.18,11.85],"V8.7":[62.34,16.61],"V8.5":[59.17,16.69],"V1.1":[53.87,15.53],"V8.10":[50.94,13.82],"V1.3":[61.67,17.28],"E_ext1":[59.19,8.71],"V8.12":[51.34,17.76],"V8.11":[51.34,14.53],"V1.7":[53.63,16.94],"V10.10":[60.79,45.12],"V13.7":[87.86,54.52]};
+let fRiOk=false;
+function rFlowDots(){
+  if(!fRiOk)return;
+  const inner=document.getElementById('ri-inner');
+  inner.querySelectorAll('.vdot').forEach(d=>d.remove());
+  const lbl=document.getElementById('f-lbl');
+  let vm={};
+  if(CS&&VSP&&VSP.s[String(CS)]){
+    const s=VSP.s[String(CS)];
+    vm=Object.fromEntries(s.o);
+    lbl.textContent=`Schritt ${s.nr}: ${s.n||'—'} · ${VSP.bl[s.b]||''}`;
+  }else{lbl.textContent='◈ Schritt wählen oder im Schritte-Tab öffnen';}
+  for(const[nm,[xp,yp]]of Object.entries(VP)){
+    const dot=document.createElement('div');
+    const val=vm[nm];
+    dot.className='vdot '+(val?vcls(val):'cl');
+    dot.style.left=xp+'%';dot.style.top=yp+'%';
+    dot.title=`${nm}: ${val||'—'}`;
+    dot.onclick=()=>toast(`${nm}: ${val||'—'}`);
+    inner.appendChild(dot);
+  }
+}
+function openFlowPicker(){pkT='F';document.getElementById('spinp').value='';bkPl('');document.getElementById('sp').classList.add('open');document.getElementById('spinp').focus();}
+let toastT;function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),2200);}
+document.getElementById('dm').addEventListener('click',function(e){if(e.target===this)closeD();});
+document.getElementById('tm').addEventListener('click',function(e){if(e.target===this)closeTm();});
+document.getElementById('sp').addEventListener('click',function(e){if(e.target===this)this.classList.remove('open');});
+ld();
+window.addEventListener('vsp-ready',()=>{
+  document.getElementById('loading').style.display='none';
+  if(ST.user&&ST.user.loginTime&&(Date.now()-ST.user.loginTime<12*3600*1000)){U=ST.user;document.getElementById('login').style.display='none';document.getElementById('app').classList.add('show');document.getElementById('tu').textContent=U.name;document.getElementById('ti').textContent=U.schicht+' · '+U.funktion;init();}
+  else{document.getElementById('login').style.display='flex';}
+});
+</script>
+<script src="vsp.js"></script>
+</body>
+</html>
