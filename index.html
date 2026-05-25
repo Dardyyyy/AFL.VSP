@@ -154,18 +154,47 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--t1);font-
 #pane-f{flex-direction:column;overflow:hidden!important;padding:0!important}
 #pane-f.active{display:flex!important}
 #ri-wrap{flex:1;overflow:auto;-webkit-overflow-scrolling:touch;min-height:0;position:relative}
-#ri-inner{position:relative;display:inline-block;min-width:1200px}
+#ri-inner{position:relative;display:inline-block;min-width:1200px;transform-origin:0 0}
 #ri-img{display:block;width:1200px;height:auto;max-width:none}
 @media(max-width:768px){#ri-inner{min-width:900px}#ri-img{width:900px}}
-.vdot{position:absolute;width:14px;height:14px;border-radius:50%;border:1.5px solid rgba(0,0,0,.5);transform:translate(-50%,-50%);cursor:pointer;z-index:10;transition:transform .15s}
-.vdot:hover,.vdot:active{transform:translate(-50%,-50%) scale(1.6)}
-.vdot.op{background:var(--gr);box-shadow:0 0 5px rgba(0,230,118,.6)}
-.vdot.nu{background:var(--ac);box-shadow:0 0 5px rgba(0,200,240,.6)}
-.vdot.tg{background:var(--yw);box-shadow:0 0 5px rgba(255,215,64,.6)}.vdot.ot{background:var(--pu);box-shadow:0 0 5px rgba(180,142,255,.6)}
-.vdot.cl{background:rgba(74,93,114,.3);border-color:rgba(74,93,114,.35)}
-@media(max-width:768px){.vdot{width:18px;height:18px;border-width:2px}}
-.f-hdr{padding:6px 12px;background:var(--bg2);border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:8px;flex-shrink:0}
-.f-hdr-t{flex:1;font-size:.72rem;color:var(--t2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:var(--fm)}
+/* Valve dots - enhanced */
+.vdot{position:absolute;width:16px;height:16px;border-radius:50%;border:2px solid rgba(0,0,0,.6);transform:translate(-50%,-50%);cursor:pointer;z-index:10;transition:transform .15s,box-shadow .15s}
+.vdot:hover,.vdot:active{transform:translate(-50%,-50%) scale(1.8);z-index:20}
+.vdot.op{background:var(--gr);box-shadow:0 0 8px rgba(0,230,118,.7)}
+.vdot.nu{background:var(--ac);box-shadow:0 0 8px rgba(0,200,240,.7)}
+.vdot.tg{background:var(--yw);box-shadow:0 0 8px rgba(255,215,64,.7)}
+.vdot.ot{background:var(--pu);box-shadow:0 0 8px rgba(180,142,255,.7)}
+.vdot.cl{background:rgba(74,93,114,.35);border-color:rgba(74,93,114,.4)}
+@media(max-width:768px){.vdot{width:20px;height:20px;border-width:2.5px}}
+/* Valve labels on hover */
+.vdot::after{content:attr(data-label);position:absolute;bottom:calc(100% + 4px);left:50%;transform:translateX(-50%);background:rgba(11,13,16,.92);border:1px solid var(--bd2);border-radius:4px;padding:2px 6px;font-family:var(--fm);font-size:.6rem;color:var(--t1);white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .15s;z-index:30}
+.vdot:hover::after,.vdot:active::after{opacity:1}
+/* Valve info tooltip panel */
+#vtip{position:absolute;z-index:100;background:var(--bg2);border:1px solid var(--ac);border-radius:10px;padding:10px 14px;min-width:160px;max-width:240px;pointer-events:auto;display:none;box-shadow:0 8px 32px rgba(0,0,0,.6)}
+#vtip.show{display:block}
+#vtip .vt-name{font-family:var(--fm);font-size:.8rem;font-weight:700;color:var(--ac);margin-bottom:4px}
+#vtip .vt-val{font-size:.82rem;color:var(--t1);margin-bottom:2px}
+#vtip .vt-desc{font-size:.72rem;color:var(--t3)}
+#vtip .vt-close{position:absolute;top:4px;right:8px;background:none;border:none;color:var(--t3);font-size:.9rem;cursor:pointer}
+/* Flow header - enhanced */
+.f-hdr{padding:8px 12px;background:var(--bg2);border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:8px;flex-shrink:0;flex-wrap:wrap}
+.f-hdr-t{flex:1;font-size:.72rem;color:var(--t2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:var(--fm);min-width:120px}
+.f-tools{display:flex;gap:6px;align-items:center}
+.f-tools button{background:var(--bg3);border:1px solid var(--bd2);border-radius:6px;color:var(--t2);font-size:.72rem;padding:5px 10px;cursor:pointer;font-family:var(--fm);transition:all .2s;white-space:nowrap}
+.f-tools button:hover,.f-tools button.active{border-color:var(--ac);color:var(--ac)}
+/* Legend bar */
+.f-legend{padding:6px 12px;background:var(--bg3);border-bottom:1px solid var(--bd);display:flex;gap:12px;align-items:center;flex-shrink:0;overflow-x:auto;flex-wrap:nowrap}
+.f-legend-item{display:flex;align-items:center;gap:4px;font-family:var(--fm);font-size:.62rem;color:var(--t2);white-space:nowrap}
+.f-legend-dot{width:10px;height:10px;border-radius:50%;border:1.5px solid rgba(0,0,0,.4);flex-shrink:0}
+/* Flow direction arrows */
+.flow-arrow{position:absolute;z-index:5;pointer-events:none}
+.flow-arrow-line{stroke:var(--ac);stroke-width:2;stroke-dasharray:6 4;opacity:.4}
+.flow-arrow-head{fill:var(--ac);opacity:.5}
+@keyframes flowDash{from{stroke-dashoffset:0}to{stroke-dashoffset:-20}}
+.flow-animated .flow-arrow-line{animation:flowDash 1.2s linear infinite}
+/* Zoom indicator */
+.f-zoom{font-family:var(--fm);font-size:.65rem;color:var(--t3);padding:2px 6px;background:var(--bg3);border-radius:4px;border:1px solid var(--bd)}
+.vdot.lbl-on::after{opacity:1!important}
 </style>
 </head>
 <body>
@@ -235,9 +264,28 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--t1);font-
     <div class="pane" id="pane-f" style="padding:0">
       <div class="f-hdr">
         <div class="f-hdr-t" id="f-lbl">◈ Schritt wählen oder im Schritte-Tab öffnen</div>
-        <button class="btn-out" onclick="openFlowPicker()">Schritt</button>
+        <div class="f-tools">
+          <button onclick="toggleLabels()" id="f-lbl-btn" title="Labels ein/aus">ABC</button>
+          <button onclick="toggleFlow()" id="f-flow-btn" title="Flussrichtung ein/aus">→</button>
+          <button onclick="zoomRI(-1)" title="Verkleinern">−</button>
+          <span class="f-zoom" id="f-zoom">100%</span>
+          <button onclick="zoomRI(1)" title="Vergrößern">+</button>
+          <button onclick="zoomRI(0)" title="Einpassen">⊡</button>
+          <button onclick="openFlowPicker()">Schritt</button>
+        </div>
       </div>
-      <div id="ri-wrap"><div id="ri-inner"><img id="ri-img" src="ri.webp" alt="RI-Fließschema" onload="fRiOk=true;rFlowDots()" onerror="document.getElementById('f-lbl').textContent='⚠ Fließbild konnte nicht geladen werden'"></div></div>
+      <div class="f-legend">
+        <div class="f-legend-item"><div class="f-legend-dot" style="background:var(--gr)"></div>Offen (X)</div>
+        <div class="f-legend-item"><div class="f-legend-dot" style="background:var(--ac)"></div>Numerisch</div>
+        <div class="f-legend-item"><div class="f-legend-dot" style="background:var(--yw)"></div>Toggle (0/1)</div>
+        <div class="f-legend-item"><div class="f-legend-dot" style="background:var(--pu)"></div>Sonstige</div>
+        <div class="f-legend-item"><div class="f-legend-dot" style="background:rgba(74,93,114,.35)"></div>Inaktiv</div>
+      </div>
+      <div id="ri-wrap"><div id="ri-inner">
+        <img id="ri-img" src="ri.webp" alt="RI-Fließschema" onload="fRiOk=true;rFlowDots()" onerror="document.getElementById('f-lbl').textContent='⚠ Fließbild konnte nicht geladen werden'">
+        <svg id="flow-svg" class="flow-arrow flow-animated" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none"></svg>
+        <div id="vtip"><button class="vt-close" onclick="document.getElementById('vtip').classList.remove('show')">✕</button><div class="vt-name" id="vt-name"></div><div class="vt-val" id="vt-val"></div><div class="vt-desc" id="vt-desc"></div></div>
+      </div></div>
     </div>
   </div>
   <div class="tabbar">
@@ -377,6 +425,39 @@ function importSync(){const c=prompt('Sync-Code:');if(!c)return;try{const d=JSON
 function rStats(){const c=document.getElementById('stcont');const all=Object.values(ST.steps);const td=all.filter(s=>s.status==='done').length,tp=all.filter(s=>s.status==='problem').length,ts2=all.filter(s=>s.status==='skip').length;const pb={};for(const[seq,s]of Object.entries(ST.steps)){if(s.status!=='problem')continue;for(const[pid,p]of Object.entries(VSP.progs)){if(p.steps.includes(parseInt(seq))){pb[pid]=(pb[pid]||0)+1;break;}}}const mx=Math.max(1,...Object.values(pb));let pr='';for(const[pid,cnt]of Object.entries(pb).sort((a,b)=>b[1]-a[1]).slice(0,8)){const p=VSP.progs[pid];if(!p)continue;pr+=`<div class="sbrw"><div class="sblb" title="${p.name}">P${pid}: ${p.name}</div><div class="sbtr"><div class="sbfl" style="width:${Math.round(cnt/mx*100)}%"></div></div><div class="sbct">${cnt}</div></div>`;}c.innerHTML=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px"><div class="scard"><div class="slbl">Erledigt</div><div class="sval" style="color:var(--gr)">${td}</div></div><div class="scard"><div class="slbl">Probleme</div><div class="sval" style="color:var(--rd)">${tp}</div></div><div class="scard"><div class="slbl">Übersprungen</div><div class="sval" style="color:var(--yw)">${ts2}</div></div><div class="scard"><div class="slbl">Schritte</div><div class="sval">${Object.keys(VSP.s).length}</div></div></div>${pr?`<div class="scard"><div class="slbl" style="margin-bottom:10px">Probleme nach Programm</div>${pr}</div>`:'<div class="empty">✓ Keine Probleme.</div>'}`;}
 const VP={"E_ext3":[87.49,48.44],"V5.1":[14.42,37.35],"V5.2":[20.34,37.37],"V5.4":[23.35,38.43],"V5.3":[25.87,37.36],"V5.13":[25.36,35.91],"V5.5":[22.89,39.18],"V3.24":[11.4,44.94],"V3.21":[13.52,47.46],"V3.18":[15.85,44.97],"V3.9":[22.52,47.46],"V3.12":[20.4,44.96],"V3.14":[18.83,44.95],"V3.23":[12.06,47.46],"V3.20":[14.35,44.97],"V3.17":[16.59,47.46],"V3.8":[23.34,44.96],"V3.11":[21.04,47.46],"V3.15":[18.07,47.49],"V3.22":[12.87,44.97],"V3.19":[15.11,47.46],"V3.16":[17.36,44.96],"V3.7":[24.07,47.46],"V3.10":[21.89,44.96],"V3.13":[19.56,47.45],"V3.3":[27.02,47.45],"V3.2":[27.8,44.95],"V3.4":[26.32,44.95],"V3.1":[28.53,47.49],"V3.5":[25.56,47.49],"V3.6":[24.84,44.94],"V5.6":[10.67,43.32],"V4.1":[10.07,69.85],"V8.4":[63.81,14.23],"V8.1":[59.85,9.28],"V8.9":[58.23,20.27],"E_ext2":[62.08,8.74],"V12.16":[80.92,48.05],"V13.3":[83.37,47.08],"V12.14":[82.72,47.32],"V7.1":[41.41,76.91],"V14.6":[79.63,77.44],"V14.4":[77.16,77.11],"V14.3":[74.14,76.95],"V5.14":[83.98,80.23],"V14.12":[85.1,80.92],"V14.13":[84.2,80.92],"V12.6":[83.18,44.37],"V7.2":[42.48,76.9],"V14.5":[72.07,76.89],"V14.10":[85.37,80.16],"V5.12":[75.17,76.94],"V14.8":[81.15,80.17],"V14.7":[82.13,80.16],"V14.9":[83.06,80.37],"V6.2":[34.22,72.52],"V5.7":[11.69,73.8],"V6.1":[33.73,74.07],"V6.3":[35.37,74.04],"V5.11":[37.85,76.95],"V6.7":[36.26,74.04],"V14.1":[76.03,76.96],"V6.5":[55.02,73.37],"V5.9":[38.74,76.89],"V4.7":[9.64,75.29],"V4.8":[10.72,76.9],"V4.13":[14.2,76.9],"V4.14":[15.13,76.91],"V14.11":[16.29,76.95],"V7.6":[18.39,76.91],"V7.5":[19.27,76.91],"V6.8":[20.47,76.9],"V12.9":[78.64,46.15],"V12.3":[83.9,43.7],"V12.1":[84.68,39.26],"V13.6":[88.66,83.39],"V14.15":[86.21,84.01],"V14.14":[87.0,84.0],"V13.5":[88.13,83.66],"V14.2":[79.64,75.76],"V10.9":[60.13,45.21],"V11.14":[63.91,47.2],"V11.12":[65.71,46.53],"V11.15":[66.41,46.29],"V11.2":[66.59,43.08],"V11.6":[66.1,43.94],"V11.9":[66.39,44.42],"V11.5":[63.91,43.13],"V10.1":[58.55,43.94],"V12.10":[79.2,46.38],"V10.8":[59.85,44.65],"V10.3":[61.87,44.82],"V11.16":[64.79,47.03],"V11.11":[67.06,46.27],"V12.2":[84.96,39.93],"V13.4":[81.76,47.8],"V11.4":[67.06,43.14],"V10.2":[61.94,41.83],"V10.4":[61.37,41.82],"V10.6":[59.48,44.01],"V10.7":[61.26,43.95],"V11.13":[64.39,46.33],"V12.12":[84.06,47.09],"V12.8":[83.41,45.47],"V11.1":[63.95,42.41],"V11.7":[63.42,45.36],"V11.8":[64.91,45.4],"V11.10":[66.92,45.38],"V12.7":[82.07,46.14],"V12.11":[83.85,46.16],"V12.15":[81.34,47.13],"V10.5":[61.26,42.67],"V11.3":[64.57,43.5],"V13.1":[71.82,46.75],"V13.2":[75.67,46.79],"V12.5":[80.93,44.39],"V12.4":[81.53,44.69],"V1.2":[59.6,17.28],"V8.6":[60.8,17.07],"V1.5":[65.01,11.3],"V8.2":[61.64,9.34],"V8.3":[60.91,13.5],"V1.6":[65.5,12.22],"V1.4":[65.18,11.85],"V8.7":[62.34,16.61],"V8.5":[59.17,16.69],"V1.1":[53.87,15.53],"V8.10":[50.94,13.82],"V1.3":[61.67,17.28],"E_ext1":[59.19,8.71],"V8.12":[51.34,17.76],"V8.11":[51.34,14.53],"V1.7":[53.63,16.94],"V10.10":[60.79,45.12],"V13.7":[87.86,54.52]};
 let fRiOk=false;
+let riZoom=1;
+let showLabels=false;
+let showFlow=true;
+// Flow direction paths between valve groups (approximate centerpoints)
+const FLOW_PATHS=[
+  // V1/V8 top area -> V10/V11 middle
+  {from:[58,14],to:[62,42],label:'Medien → Prozess'},
+  // V3 left cluster -> V5 spread
+  {from:[20,46],to:[15,38],label:'Medien → Sicherheit'},
+  // V10 -> V11
+  {from:[60,43],to:[65,44],label:''},
+  // V11 -> V12
+  {from:[67,45],to:[79,45],label:''},
+  // V12 -> V13
+  {from:[83,47],to:[78,47],label:''},
+  // V4/V5/V6/V7 bottom -> V14 bottom right
+  {from:[30,76],to:[72,77],label:'Ablauf → Ausgang'},
+  // V13 -> E_ext3
+  {from:[85,48],to:[87,48],label:''},
+];
+function drawFlowArrows(){
+  const svg=document.getElementById('flow-svg');
+  if(!svg)return;
+  if(!showFlow){svg.innerHTML='';return;}
+  let h='';
+  const id='fam';
+  h+=`<defs><marker id="${id}" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon class="flow-arrow-head" points="0 0, 8 3, 0 6"/></marker></defs>`;
+  for(const p of FLOW_PATHS){
+    const x1=p.from[0]+'%',y1=p.from[1]+'%',x2=p.to[0]+'%',y2=p.to[1]+'%';
+    h+=`<line class="flow-arrow-line" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" marker-end="url(#${id})"/>`;
+  }
+  svg.innerHTML=h;
+}
 function rFlowDots(){
   if(!fRiOk)return;
   const inner=document.getElementById('ri-inner');
@@ -388,21 +469,80 @@ function rFlowDots(){
     vm=Object.fromEntries(s.o);
     lbl.textContent=`Schritt ${s.nr}: ${s.n||'—'} · ${VSP.bl[s.b]||''}`;
   }else{lbl.textContent='◈ Schritt wählen oder im Schritte-Tab öffnen';}
+  const activeCount={op:0,nu:0,tg:0,ot:0,cl:0};
   for(const[nm,[xp,yp]]of Object.entries(VP)){
     const dot=document.createElement('div');
     const val=vm[nm];
-    dot.className='vdot '+(val?vcls(val):'cl');
+    const cls=val?vcls(val):'cl';
+    activeCount[cls]=(activeCount[cls]||0)+1;
+    dot.className='vdot '+cls;
     dot.style.left=xp+'%';dot.style.top=yp+'%';
+    dot.setAttribute('data-label',nm+(val?' = '+val:''));
     dot.title=`${nm}: ${val||'—'}`;
-    dot.onclick=()=>toast(`${nm}: ${val||'—'}`);
+    dot.onclick=(e)=>{
+      e.stopPropagation();
+      showVtip(nm,val,xp,yp);
+    };
     inner.appendChild(dot);
   }
+  drawFlowArrows();
+  // Update counter in header
+  const total=Object.keys(VP).length;
+  const active=total-activeCount.cl;
+  if(CS&&VSP&&VSP.s[String(CS)]){
+    const s=VSP.s[String(CS)];
+    lbl.textContent=`Schritt ${s.nr}: ${s.n||'—'} · ${active}/${total} Ventile aktiv`;
+  }
+}
+function showVtip(nm,val,xp,yp){
+  const tip=document.getElementById('vtip');
+  const vi=VSP?.vi?.[nm];
+  document.getElementById('vt-name').textContent=nm;
+  document.getElementById('vt-val').textContent=val?`Stellung: ${val}`:'Nicht aktiv in diesem Schritt';
+  document.getElementById('vt-desc').textContent=vi?.d||vi?.g||'';
+  // Position tooltip
+  tip.style.left=Math.min(xp+1,85)+'%';
+  tip.style.top=Math.max(yp-8,2)+'%';
+  tip.classList.add('show');
+}
+function toggleLabels(){
+  showLabels=!showLabels;
+  document.getElementById('f-lbl-btn').classList.toggle('active',showLabels);
+  document.querySelectorAll('.vdot').forEach(d=>{
+    if(showLabels){
+      d.style.setProperty('--lbl-opacity','1');
+      // Force show labels
+      d.classList.add('lbl-on');
+    }else{
+      d.classList.remove('lbl-on');
+    }
+  });
+}
+function toggleFlow(){
+  showFlow=!showFlow;
+  document.getElementById('f-flow-btn').classList.toggle('active',showFlow);
+  drawFlowArrows();
+}
+function zoomRI(dir){
+  const inner=document.getElementById('ri-inner');
+  const wrap=document.getElementById('ri-wrap');
+  if(dir===0){
+    // Fit to screen
+    const ww=wrap.clientWidth;
+    riZoom=ww/1200;
+  }else{
+    riZoom=Math.max(0.3,Math.min(2.5,riZoom+(dir*0.2)));
+  }
+  inner.style.transform=`scale(${riZoom})`;
+  inner.style.minWidth=(1200*riZoom)+'px';
+  document.getElementById('f-zoom').textContent=Math.round(riZoom*100)+'%';
 }
 function openFlowPicker(){pkT='F';document.getElementById('spinp').value='';bkPl('');document.getElementById('sp').classList.add('open');document.getElementById('spinp').focus();}
 let toastT;function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),2200);}
 document.getElementById('dm').addEventListener('click',function(e){if(e.target===this)closeD();});
 document.getElementById('tm').addEventListener('click',function(e){if(e.target===this)closeTm();});
 document.getElementById('sp').addEventListener('click',function(e){if(e.target===this)this.classList.remove('open');});
+document.getElementById('ri-wrap')?.addEventListener('click',function(e){if(!e.target.closest('.vdot')&&!e.target.closest('#vtip'))document.getElementById('vtip')?.classList.remove('show');});
 ld();
 // Fallback: if image was already cached, onload might not fire
 const _riImg=document.getElementById('ri-img');
